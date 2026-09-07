@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Geeks — Drive-Thru Voice Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="rig">
+ 
+    <header class="rig-header">
+      <div class="wordmark">IT GEEKS</div>
+      <div class="tagline">Drive-thru voice order</div>
+      <div class="conn" id="conn-status">
+        <span class="conn-dot" id="conn-dot"></span>
+        <span id="conn-text">Not connected</span>
+      </div>
+    </header>
+ 
+    <main class="rig-body">
+ 
+      <section class="board" aria-label="Menu">
+        <h2 class="board-title">Today's menu</h2>
+        <ul class="board-list">
+          <li><span class="item-name">Cheeseburger</span><span class="item-rule"></span><span class="item-price">$5</span></li>
+          <li><span class="item-name">Veggie burger</span><span class="item-rule"></span><span class="item-price">$4</span></li>
+          <li><span class="item-name">Fries</span><span class="item-rule"></span><span class="item-price">$2</span></li>
+          <li><span class="item-name">Coke</span><span class="item-rule"></span><span class="item-price">$2</span></li>
+        </ul>
+        <p class="board-hint">Say what you'd like — you can change your mind mid-order.</p>
+      </section>
+ 
+      <section class="box" aria-label="Speaker">
+ 
+        <div class="meter" id="meter" aria-hidden="true">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+ 
+        <button id="talk-btn" class="talk-btn" type="button">
+          <span id="talk-btn-label">Tap to talk</span>
+        </button>
+ 
+        <p class="box-status" id="status">Press the button and start ordering</p>
+ 
+        <div class="transcript" id="chat-box">
+          <p class="transcript-empty">Your order will show up here as you talk.</p>
+        </div>
+ 
+      </section>
+ 
+    </main>
+ 
+  </div>
+ 
+<script src="/static/app.js"></script>
+</body>
+</html>

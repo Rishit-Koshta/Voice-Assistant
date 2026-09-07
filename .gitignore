@@ -1,0 +1,11 @@
+# Python environment
+venv/
+__pycache__/
+*.pyc
+
+# Environment variables / API keys (NEVER push this!)
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
