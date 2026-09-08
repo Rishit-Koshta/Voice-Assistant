@@ -51,9 +51,10 @@ async def websocket_endpoint(websocket: WebSocket):
     speech_buffer = bytearray()
     is_speaking = False
     silence_chunks = 0
-    SILENCE_THRESHOLD_CHUNKS = 45 # ~1.4 seconds of silence
+    SILENCE_THRESHOLD_CHUNKS = 45  # ~1.4 seconds of silence
     
     is_bot_speaking = False
+    pending_audio_chunks = 0  # chunks sent to the client but not yet confirmed played
     current_response_task = None
     
     chat_history = [
@@ -68,7 +69,7 @@ async def websocket_endpoint(websocket: WebSocket):
     ]
     
     async def generate_bot_response(user_text: str):
-        nonlocal is_bot_speaking
+        nonlocal is_bot_speaking, pending_audio_chunks
         is_bot_speaking = True
         chat_history.append({"role": "user", "content": user_text})
         audio_queue: asyncio.Queue = asyncio.Queue()
@@ -99,6 +100,7 @@ async def websocket_endpoint(websocket: WebSocket):
             return assistant_response
 
         async def speak_sentences():
+            nonlocal pending_audio_chunks
             while True:
                 sentence = await audio_queue.get()
                 if sentence is None:
@@ -110,6 +112,7 @@ async def websocket_endpoint(websocket: WebSocket):
                         sentence_audio.extend(tts_chunk["data"])
                 if sentence_audio:
                     await websocket.send_bytes(bytes(sentence_audio))
+                    pending_audio_chunks += 1  # client now has audio it hasn't finished playing
 
         text_task = asyncio.create_task(stream_text())
         audio_task = asyncio.create_task(speak_sentences())
@@ -120,17 +123,17 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.send_text("ASSISTANT_DONE")
             chat_history.append({"role": "assistant", "content": assistant_response})
         except asyncio.CancelledError:
-            print("⚡ Bot response task was cancelled (Barge-in interrupted)!")
+            print("⚡ Generation cancelled (barge-in)")
             text_task.cancel()
             audio_task.cancel()
             await asyncio.gather(text_task, audio_task, return_exceptions=True)
-            await websocket.send_text("ASSISTANT_INTERRUPTED")
-            await websocket.send_text("STOP_AUDIO")
         except Exception as e:
             print(f"⚠️ Error in bot response: {e}")
             await websocket.send_text("ASSISTANT_DONE")
         finally:
-            is_bot_speaking = False
+            # Only stop considering the bot "speaking" once nothing is left playing client-side
+            if pending_audio_chunks == 0:
+                is_bot_speaking = False
 
     try:
         while True:
@@ -139,6 +142,13 @@ async def websocket_endpoint(websocket: WebSocket):
             if message.get("type") == "websocket.disconnect":
                 print("🔴 Client sent disconnect signal")
                 break
+                
+            # Client confirms one queued audio chunk finished playing
+            if message.get("text") == "AUDIO_ACK":
+                pending_audio_chunks = max(0, pending_audio_chunks - 1)
+                if pending_audio_chunks == 0 and current_response_task and current_response_task.done():
+                    is_bot_speaking = False
+                continue
                 
             if "bytes" in message and message["bytes"]:
                 audio_bytes = message["bytes"]
@@ -151,13 +161,20 @@ async def websocket_endpoint(websocket: WebSocket):
                     confidence = model(audio_tensor, 16000).item()
                     
                     if confidence > 0.5:
-                        # --- BARGE-IN TRIGGERED ---
-                        if is_bot_speaking and current_response_task and not current_response_task.done():
-                            print("⚡ User interrupted the bot! Cancelling current response...")
-                            current_response_task.cancel()
+                        if is_bot_speaking:
+                            # --- BARGE-IN TRIGGERED ---
+                            # Don't gate this on current_response_task.done() — generation
+                            # usually finishes well before playback does, so the task is
+                            # often already done by the time the user interrupts.
+                            print("⚡ User interrupted the bot! Stopping playback now...")
+                            if current_response_task and not current_response_task.done():
+                                current_response_task.cancel()
+                            pending_audio_chunks = 0
+                            is_bot_speaking = False
                             speech_buffer.clear()
                             is_speaking = True
-                            is_bot_speaking = False
+                            await websocket.send_text("ASSISTANT_INTERRUPTED")
+                            await websocket.send_text("STOP_AUDIO")
                             break
                         
                         if not is_speaking:
@@ -167,7 +184,6 @@ async def websocket_endpoint(websocket: WebSocket):
                     elif is_speaking:
                         silence_chunks += 1
                 
-                # If bot is talking and user hasn't triggered barge-in yet, skip buffering
                 if is_bot_speaking:
                     continue
                 
@@ -191,7 +207,6 @@ async def websocket_endpoint(websocket: WebSocket):
                         
                         if clean_text:
                             await websocket.send_text(f"USER: {clean_text}")
-                            # Start bot response as an async background task so it can be cancelled
                             current_response_task = asyncio.create_task(generate_bot_response(clean_text))
                             
                     except Exception as e:
