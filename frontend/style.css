@@ -1,15 +1,15 @@
 :root {
-  --bg: #17140F;
-  --panel: #211C15;
-  --panel-line: #3A3226;
-  --cream: #F3ECDC;
-  --cream-dim: #B9AF9C;
-  --mustard: #E3A008;
-  --mustard-dim: #6B4F0E;
-  --tomato: #C1440E;
-  --sage: #8AA399;
+  --bg: #0A1E24;
+  --panel: #102A32;
+  --panel-line: #1F4652;
+  --cream: #EAF7FB;
+  --cream-dim: #7FA9B3;
+  --mustard: #25BBED;
+  --mustard-dim: #14586E;
+  --tomato: #E5586B;
+  --sage: #86DAF6;
 
-  --font-display: 'Bebas Neue', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
 }
 
@@ -20,8 +20,8 @@ body {
   min-height: 100vh;
   background: var(--bg);
   background-image:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(227, 160, 8, 0.08), transparent),
-    radial-gradient(ellipse 700px 500px at 100% 100%, rgba(138, 163, 153, 0.05), transparent);
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(37, 187, 237, 0.10), transparent),
+    radial-gradient(ellipse 700px 500px at 100% 100%, rgba(134, 218, 246, 0.06), transparent);
   color: var(--cream);
   font-family: var(--font-body);
   display: flex;
@@ -48,11 +48,17 @@ body {
 
 .wordmark {
   font-family: var(--font-display);
-  font-size: 40px;
-  letter-spacing: 1px;
-  color: var(--mustard);
+  font-size: 32px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.5px;
   line-height: 1;
+  transform: skewX(-4deg);
+  display: inline-block;
 }
+
+.wordmark .wm-dim { color: var(--cream); }
+.wordmark .wm-accent { color: var(--mustard); }
 
 .tagline {
   font-size: 14px;
@@ -79,12 +85,12 @@ body {
 
 .conn.live .conn-dot {
   background: var(--sage);
-  box-shadow: 0 0 8px rgba(138, 163, 153, 0.7);
+  box-shadow: 0 0 8px rgba(37, 187, 237, 0.7);
 }
 
 .conn.hot .conn-dot {
   background: var(--tomato);
-  box-shadow: 0 0 8px rgba(193, 68, 14, 0.7);
+  box-shadow: 0 0 8px rgba(229, 88, 107, 0.7);
 }
 
 /* ---- layout ---- */
@@ -205,12 +211,12 @@ body {
 
 .talk-btn.on {
   border-color: var(--mustard);
-  background: rgba(227, 160, 8, 0.1);
+  background: rgba(37, 187, 237, 0.1);
 }
 
 .talk-btn.on.bot-speaking {
   border-color: var(--sage);
-  background: rgba(138, 163, 153, 0.1);
+  background: rgba(134, 218, 246, 0.12);
 }
 
 .box-status {
