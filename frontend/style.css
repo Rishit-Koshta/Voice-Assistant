@@ -8,13 +8,13 @@
   --mustard-dim: #6B4F0E;
   --tomato: #C1440E;
   --sage: #8AA399;
- 
+
   --font-display: 'Bebas Neue', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
 }
- 
+
 * { box-sizing: border-box; }
- 
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -28,14 +28,14 @@ body {
   justify-content: center;
   padding: 32px 20px 60px;
 }
- 
+
 .rig {
   width: 100%;
   max-width: 900px;
 }
- 
+
 /* ---- header ---- */
- 
+
 .rig-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -45,7 +45,7 @@ body {
   padding-bottom: 18px;
   margin-bottom: 24px;
 }
- 
+
 .wordmark {
   font-family: var(--font-display);
   font-size: 40px;
@@ -53,13 +53,13 @@ body {
   color: var(--mustard);
   line-height: 1;
 }
- 
+
 .tagline {
   font-size: 14px;
   color: var(--cream-dim);
   align-self: end;
 }
- 
+
 .conn {
   display: flex;
   align-items: center;
@@ -68,7 +68,7 @@ body {
   color: var(--cream-dim);
   align-self: end;
 }
- 
+
 .conn-dot {
   width: 8px;
   height: 8px;
@@ -76,31 +76,31 @@ body {
   background: #6B6152;
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
- 
+
 .conn.live .conn-dot {
   background: var(--sage);
   box-shadow: 0 0 8px rgba(138, 163, 153, 0.7);
 }
- 
+
 .conn.hot .conn-dot {
   background: var(--tomato);
   box-shadow: 0 0 8px rgba(193, 68, 14, 0.7);
 }
- 
+
 /* ---- layout ---- */
- 
+
 .rig-body {
   display: grid;
   grid-template-columns: 220px 1fr;
   gap: 20px;
 }
- 
+
 @media (max-width: 680px) {
   .rig-body { grid-template-columns: 1fr; }
 }
- 
+
 /* ---- menu board ---- */
- 
+
 .board {
   background: var(--panel);
   border: 1px solid var(--panel-line);
@@ -108,7 +108,7 @@ body {
   padding: 20px 18px;
   align-self: start;
 }
- 
+
 .board-title {
   font-family: var(--font-body);
   font-weight: 600;
@@ -116,13 +116,13 @@ body {
   margin: 0 0 14px;
   color: var(--cream-dim);
 }
- 
+
 .board-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
- 
+
 .board-list li {
   display: flex;
   align-items: baseline;
@@ -131,31 +131,31 @@ body {
   border-top: 1px solid var(--panel-line);
   font-size: 15px;
 }
- 
+
 .board-list li:first-child { border-top: none; }
- 
+
 .item-name { white-space: nowrap; }
- 
+
 .item-rule {
   flex: 1;
   border-bottom: 1px dotted var(--panel-line);
   transform: translateY(-4px);
 }
- 
+
 .item-price {
   color: var(--mustard);
   font-variant-numeric: tabular-nums;
 }
- 
+
 .board-hint {
   margin: 16px 0 0;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--cream-dim);
 }
- 
+
 /* ---- speaker box ---- */
- 
+
 .box {
   background: var(--panel);
   border: 1px solid var(--panel-line);
@@ -165,7 +165,7 @@ body {
   flex-direction: column;
   align-items: center;
 }
- 
+
 /* live level meter, driven by AnalyserNode in app.js */
 .meter {
   display: flex;
@@ -174,7 +174,7 @@ body {
   height: 40px;
   margin-bottom: 22px;
 }
- 
+
 .meter .bar {
   width: 5px;
   height: 6px;
@@ -182,10 +182,10 @@ body {
   background: var(--mustard-dim);
   transition: height 0.06s ease-out, background 0.06s ease-out;
 }
- 
+
 .meter.listening .bar { background: var(--mustard); }
 .meter.bot .bar { background: var(--sage); }
- 
+
 .talk-btn {
   width: 120px;
   height: 120px;
@@ -199,29 +199,29 @@ body {
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.08s ease;
 }
- 
+
 .talk-btn:hover { border-color: var(--mustard); }
 .talk-btn:active { transform: scale(0.97); }
- 
+
 .talk-btn.on {
   border-color: var(--mustard);
   background: rgba(227, 160, 8, 0.1);
 }
- 
+
 .talk-btn.on.bot-speaking {
   border-color: var(--sage);
   background: rgba(138, 163, 153, 0.1);
 }
- 
+
 .box-status {
   margin: 16px 0 0;
   font-size: 13px;
   color: var(--cream-dim);
   min-height: 18px;
 }
- 
+
 /* ---- transcript ---- */
- 
+
 .transcript {
   width: 100%;
   margin-top: 20px;
@@ -233,13 +233,13 @@ body {
   flex-direction: column;
   gap: 10px;
 }
- 
+
 .transcript-empty {
   color: var(--cream-dim);
   font-size: 13px;
   margin: 0;
 }
- 
+
 .bubble {
   max-width: 85%;
   padding: 9px 13px;
@@ -247,25 +247,25 @@ body {
   font-size: 14px;
   line-height: 1.45;
 }
- 
+
 .bubble.user {
   align-self: flex-end;
   background: var(--mustard-dim);
   color: var(--cream);
   border-bottom-right-radius: 2px;
 }
- 
+
 .bubble.bot {
   align-self: flex-start;
   background: #2A241B;
   border: 1px solid var(--panel-line);
   border-bottom-left-radius: 2px;
 }
- 
+
 .bubble.bot.interrupted {
   opacity: 0.6;
 }
- 
+
 .bubble.bot.interrupted::after {
   content: "interrupted";
   display: block;
@@ -273,6 +273,6 @@ body {
   font-size: 11px;
   color: var(--tomato);
 }
- 
+
 .transcript::-webkit-scrollbar { width: 8px; }
 .transcript::-webkit-scrollbar-thumb { background: var(--panel-line); border-radius: 4px; }
